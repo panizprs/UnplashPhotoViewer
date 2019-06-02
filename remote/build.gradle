@@ -1,0 +1,19 @@
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation project(":data")
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    api "com.squareup.retrofit2:retrofit:$libraries.retrofit"
+    api "com.squareup.retrofit2:converter-gson:$libraries.retrofit"
+    api "com.squareup.retrofit2:adapter-rxjava:$libraries.retrofit"
+    api "com.squareup.retrofit2:adapter-rxjava2:$libraries.retrofit"
+    api "com.squareup.okhttp3:okhttp:$libraries.okHttp"
+    api "com.google.code.gson:gson:$libraries.gson"
+}
+
+
+
+
