@@ -15,8 +15,9 @@ class HomeViewModel(private val getLatestPhotoUseCase : GetLatestPhotosUseCase) 
     private val _error = MutableLiveData<Throwable>()
     val error : LiveData<Throwable> = _error
 
-    fun getLatestPhotos(){
-        getLatestPhotoUseCase.execute(GetLatestPhotosUseCase.None(), ::success, ::fail)
+    fun getLatestPhotos(page: Int){
+        println(page)
+        getLatestPhotoUseCase.execute(GetLatestPhotosUseCase.Param(page, 24), ::success, ::fail)
     }
 
     private fun success(photos : List<Photo>){

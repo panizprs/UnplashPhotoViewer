@@ -9,8 +9,8 @@ import io.reactivex.Single
 
 
 class PhotoRepositoryImpl(private val photoRemoteDataSource: PhotoRemoteDataSource) : PhotoRepository {
-    override fun getLatest(): Single<List<Photo>> {
-        return photoRemoteDataSource.getLatest().map { photoEntities ->
+    override fun getLatest(page: Int, pageSize: Int): Single<List<Photo>> {
+        return photoRemoteDataSource.getLatest(page, pageSize).map { photoEntities ->
             photoEntities.map { photoEntity ->
                 photoEntity.toPhoto()
             }

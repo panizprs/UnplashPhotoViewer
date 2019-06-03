@@ -44,7 +44,9 @@ class HomeFragment : DaggerFragment() {
         val homeAdapter = HomeAdapter()
         recyclerView?.adapter = homeAdapter
 
-        homeViewModel.getLatestPhotos()
+        var pageIndex = 1
+        homeViewModel.getLatestPhotos(pageIndex)
+        pageIndex++
         homeViewModel.photos.observe(this, Observer { photos ->
             loadingBar?.visibility = View.GONE
             homeAdapter.addPhotos(photos)
@@ -60,11 +62,16 @@ class HomeFragment : DaggerFragment() {
                 super.onScrollStateChanged(recyclerView, newState)
 
                 if (!recyclerView.canScrollVertically(1)) {
-                    homeViewModel.getLatestPhotos()
+                    Toast.makeText(context, "Last", Toast.LENGTH_LONG).show()
+                    homeViewModel.getLatestPhotos(pageIndex)
+                    pageIndex++
                     homeViewModel.photos.observe(this@HomeFragment, Observer { photos ->
                         homeAdapter.addPhotos(photos)
                     })
-//                    Toast.makeText(context, "Last", Toast.LENGTH_LONG).show()
+                    homeViewModel.error.observe(this@HomeFragment, Observer { throwable ->
+                        Toast.makeText(context, throwable.toString(), Toast.LENGTH_LONG)
+                    })
+
 
                 }
             }

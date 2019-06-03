@@ -7,9 +7,9 @@ import com.acm.workshop.remote.dto.toPhotoEntity
 import io.reactivex.Single
 
 class PhotoRemoteDataSourceImpl(private val photoApi: PhotoApi) : PhotoRemoteDataSource {
-    override fun getLatest(): Single<List<PhotoEntity>> {
+    override fun getLatest(page: Int, pageSize: Int): Single<List<PhotoEntity>> {
 
-        return photoApi.getPhotos("f49cf4050a7f98026dc1e6cec7033e151d936de8435faba8e637aa0d10cc6bd1", 1, 24).map { response ->
+        return photoApi.getPhotos("f49cf4050a7f98026dc1e6cec7033e151d936de8435faba8e637aa0d10cc6bd1", page, pageSize).map { response ->
 //        return photoApi.getPhotos( 1, 10).map { reponse ->
             response.body()?.map {unsplashPhoto ->
                 unsplashPhoto.toPhotoEntity()
