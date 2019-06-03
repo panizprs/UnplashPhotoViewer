@@ -13,9 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.acm.workshop.unplashphotoviewer.R
 import com.acm.workshop.unplashphotoviewer.app.UnplashPhotoViewerApp
+import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-class HomeFragment : Fragment(){
+class HomeFragment : DaggerFragment(){
 
     @Inject
     lateinit var homeViewModelFactory : HomeViewModelFactory
@@ -24,11 +25,7 @@ class HomeFragment : Fragment(){
         ViewModelProviders.of(this, homeViewModelFactory).get(HomeViewModel::class.java)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        UnplashPhotoViewerApp.component.inject(this)
-    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

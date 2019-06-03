@@ -9,7 +9,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class AppModule(app: UnplashPhotoViewerApp) {
+class AppModule {
 
     @Provides
     fun provideContext(app: UnplashPhotoViewerApp) = app.applicationContext

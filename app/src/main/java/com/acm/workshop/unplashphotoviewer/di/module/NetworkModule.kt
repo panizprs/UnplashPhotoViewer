@@ -50,27 +50,3 @@ class NetworkModule {
     fun providePhotoApi(retrofit: Retrofit) = retrofit.create(PhotoApi::class.java)
 
 }
-
-fun main(){
-
-    val retrofit = Retrofit.Builder()
-        .baseUrl(PhotoApi.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .client(OkHttpClient())
-        .build()
-
-    val photoApi = retrofit.create(PhotoApi::class.java)
-
-    photoApi.getPhotos("f49cf4050a7f98026dc1e6cec7033e151d936de8435faba8e637aa0d10cc6bd1", 1, 10)
-        .subscribe({response ->
-            response.body()?.map { unsplashPhoto ->
-                println("unplash: ${unsplashPhoto.id}")
-                unsplashPhoto.toPhotoEntity()
-            }
-        },{
-            println("error $it")
-        })
-
-
-}

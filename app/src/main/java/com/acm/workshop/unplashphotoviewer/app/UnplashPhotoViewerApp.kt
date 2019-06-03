@@ -4,17 +4,12 @@ import android.app.Application
 import com.acm.workshop.unplashphotoviewer.di.component.AppComponent
 import com.acm.workshop.unplashphotoviewer.di.component.DaggerAppComponent
 import com.acm.workshop.unplashphotoviewer.di.module.AppModule
+import dagger.android.AndroidInjector
+import dagger.android.support.DaggerApplication
 
-class UnplashPhotoViewerApp : Application(){
-
-    override fun onCreate() {
-        super.onCreate()
-
-        component = DaggerAppComponent.builder().appModule(AppModule(this)).build()
+class UnplashPhotoViewerApp : DaggerApplication(){
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerAppComponent.factory().create(this)
     }
 
-    companion object {
-
-        lateinit var component : AppComponent
-    }
 }
