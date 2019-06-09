@@ -15,11 +15,12 @@ class GetLatestPhotosUseCase @Inject constructor(
 ) : SingleUseCase<GetLatestPhotosUseCase.Param, List<Photo>>(postExecutorThread, backgroundExecutorThread) {
 
     override fun buildSingle(params: Param): Single<List<Photo>> {
-        return photoRepository.getLatest(params.page, params.pageSize)
+        return photoRepository.getLatest(params.page, params.pageSize, params.orderBy)
     }
 
     data class Param(
         val page: Int,
-        val pageSize: Int
+        val pageSize: Int,
+        val orderBy: String
     )
 }

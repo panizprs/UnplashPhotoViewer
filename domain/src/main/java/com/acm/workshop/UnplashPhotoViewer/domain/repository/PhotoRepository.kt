@@ -5,6 +5,6 @@ import com.acm.workshop.UnplashPhotoViewer.domain.model.Photo
 import io.reactivex.Single
 
 interface PhotoRepository {
-    fun getLatest(page: Int, pageSize: Int) : Single<List<Photo>>
+    fun getLatest(page: Int, pageSize: Int, orderBy: String) : Single<List<Photo>>
 
 }

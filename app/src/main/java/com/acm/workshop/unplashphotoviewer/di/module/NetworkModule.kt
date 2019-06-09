@@ -1,17 +1,22 @@
 package com.acm.workshop.unplashphotoviewer.di.module
 
+import android.content.Context
+import android.net.ConnectivityManager
 import com.acm.workshop.remote.api.PhotoApi
-import com.acm.workshop.remote.dto.toPhotoEntity
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import android.net.NetworkInfo
+
+
+
 
 @Module
 class NetworkModule {
-
 
     @Provides
     fun provideOkHttpClient() = OkHttpClient()
@@ -48,5 +53,16 @@ class NetworkModule {
 
     @Provides
     fun providePhotoApi(retrofit: Retrofit) = retrofit.create(PhotoApi::class.java)
+
+
+
+    companion object {
+        fun isNetworkConnected(context : Context?) : Boolean {
+            return (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+                .activeNetworkInfo?.isConnected == true
+        }
+    }
+
+
 
 }

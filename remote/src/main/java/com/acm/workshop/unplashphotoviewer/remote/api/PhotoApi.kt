@@ -16,7 +16,8 @@ interface PhotoApi {
     fun getPhotos(
         @Query("client_id") clientId: String,
         @Query("page") page: Int,
-        @Query("per_page") pageSize: Int
+        @Query("per_page") pageSize: Int,
+        @Query("order_by") orderBy : String
     ): Single<Response<List<UnsplashPhoto>>>
 
     companion object {
