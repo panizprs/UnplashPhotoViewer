@@ -8,14 +8,14 @@ import com.acm.workshop.UnplashPhotoViewer.domain.repository.PhotoRepository
 import io.reactivex.Single
 import javax.inject.Inject
 
-class GetLatestPhotosUseCase @Inject constructor(
+class GetPhotosUseCase @Inject constructor(
     private val photoRepository: PhotoRepository,
     postExecutorThread: PostExecutorThread,
     backgroundExecutorThread: UseCaseExecutorThread
-) : SingleUseCase<GetLatestPhotosUseCase.Param, List<Photo>>(postExecutorThread, backgroundExecutorThread) {
+) : SingleUseCase<GetPhotosUseCase.Param, List<Photo>>(postExecutorThread, backgroundExecutorThread) {
 
     override fun buildSingle(params: Param): Single<List<Photo>> {
-        return photoRepository.getLatest(params.page, params.pageSize, params.orderBy)
+        return photoRepository.getPhotos(params.page, params.pageSize, params.orderBy)
     }
 
     data class Param(

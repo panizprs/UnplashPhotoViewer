@@ -5,7 +5,6 @@ import com.acm.workshop.unplashphotoviewer.di.module.AppModule
 import com.acm.workshop.unplashphotoviewer.di.module.FragmentsModule
 import com.acm.workshop.unplashphotoviewer.di.module.HomeModule
 import com.acm.workshop.unplashphotoviewer.di.module.NetworkModule
-import com.acm.workshop.unplashphotoviewer.ui.home.HomeFragment
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector

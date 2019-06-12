@@ -6,5 +6,5 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 interface PhotoRemoteDataSource{
-    fun getLatest(page: Int, pageSize: Int, orderBy: String): Single<List<PhotoEntity>>
+    fun getPhotos(page: Int, pageSize: Int, orderBy: String): Single<List<PhotoEntity>>
 }

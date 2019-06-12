@@ -1,7 +1,6 @@
 package com.acm.workshop.unplashphotoviewer.ui.home
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.acm.workshop.unplashphotoviewer.R
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.home_frgament.*
-import java.util.zip.Inflater
 import javax.inject.Inject
 
 
@@ -47,7 +45,6 @@ class HomeFragment : DaggerFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val loadingBar = view?.findViewById<View>(R.id.loadingBar)
         recyclerView = view?.findViewById(R.id.recyclerView)
         recyclerView?.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
 
@@ -64,6 +61,7 @@ class HomeFragment : DaggerFragment() {
                 if (!recyclerView.canScrollVertically(1)) {
                     Toast.makeText(context, "Last", Toast.LENGTH_LONG).show()
                     pageIndex++
+                    println(pageIndex)
                     loadPhotos(pageIndex, homeAdapter, orderBy)
                 }
             }
@@ -71,10 +69,20 @@ class HomeFragment : DaggerFragment() {
     }
 
     fun loadPhotos(pageIndex : Int , homeAdapter : HomeAdapter, orderBy : String){
-        homeViewModel.getLatestPhotos(pageIndex, orderBy, context)
+        homeViewModel.getPhotos(pageIndex, orderBy, context)
+
+        if(pageIndex == 1)
+            recyclerView?.scrollToPosition(0)
+
         homeViewModel.photos.observe(this, Observer { photos ->
             loadingBar?.visibility = View.GONE
-            homeAdapter.addPhotos(photos)
+            println("observe $pageIndex")
+            if(pageIndex == 1) {
+                println("update photos")
+                homeAdapter.updatePhotos(photos)
+            }
+            else
+                homeAdapter.addPhotos(photos)
         })
 
         homeViewModel.error.observe(this, Observer { throwable ->
@@ -84,10 +92,10 @@ class HomeFragment : DaggerFragment() {
             builder.setMessage(throwable.message)
 
 
-            builder.setPositiveButton("retry", { dialog, which ->
+            builder.setPositiveButton("retry") { dialog, which ->
                 dialog.dismiss()
-                homeViewModel.getLatestPhotos(pageIndex, orderBy, context)
-            })
+                homeViewModel.getPhotos(pageIndex, orderBy, context)
+            }
 
             val dialog = builder.create()
             dialog.show()

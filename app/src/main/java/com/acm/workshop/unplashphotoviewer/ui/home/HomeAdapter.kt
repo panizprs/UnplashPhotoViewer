@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.acm.workshop.UnplashPhotoViewer.domain.model.Photo
 import com.acm.workshop.unplashphotoviewer.R
 import com.squareup.picasso.Picasso
-import android.widget.Toast
+
 
 
 
@@ -18,9 +18,16 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
 
     private var photos = mutableListOf<Photo>()
 
-    fun addPhotos(newPhotos : List<Photo>){
-        photos.addAll(newPhotos)
+    fun updatePhotos(list: List<Photo>) {
+        photos = list.toMutableList()
         notifyDataSetChanged()
+    }
+
+
+    fun addPhotos(newPhotos : List<Photo>){
+        val prvSize = photos.size
+        photos.addAll(newPhotos)
+        notifyItemRangeChanged(prvSize, photos.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
@@ -33,7 +40,6 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
         holder.bind(photos[position])
     }
-
 
 
     class HomeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
