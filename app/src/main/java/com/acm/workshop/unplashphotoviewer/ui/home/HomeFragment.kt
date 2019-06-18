@@ -1,21 +1,23 @@
 package com.acm.workshop.unplashphotoviewer.ui.home
 
 import android.app.AlertDialog
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.acm.workshop.unplashphotoviewer.R
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.home_frgament.*
 import javax.inject.Inject
-
-
-
-
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.acm.workshop.remote.api.PhotoApi.Companion.ORDER_BY_LATEST
+import com.acm.workshop.remote.api.PhotoApi.Companion.ORDER_BY_OLDEST
+import com.acm.workshop.remote.api.PhotoApi.Companion.ORDER_BY_POPULAR
+import com.acm.workshop.unplashphotoviewer.R
 
 
 class HomeFragment : DaggerFragment() {
@@ -28,35 +30,78 @@ class HomeFragment : DaggerFragment() {
     }
 
 
-    var recyclerView: RecyclerView? = null
+    lateinit var orderBy : String
 
-    var orderBy = "latest"
+    var pageIndex : Int = 1
+
+    var recyclerView: RecyclerView? = null
+    var currentPosition: Int? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        println("onCreate")
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        savedInstanceState?.let { savedState ->
+            pageIndex = savedState.getInt(KEY_PAGE_INDEX)
+            currentPosition = savedState.getInt(KEY_LAST_POSITION)
+            orderBy = savedState.getString(KEY_ORDER_BY)
+            println("onRestore: $currentPosition")
+            println("onRestore: $pageIndex")
+            println("orderBY: $orderBy" )
+        }.run {
+            pageIndex = 1
+            currentPosition = 0
+            orderBy = "latest"
+
+        }
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        println("onCreateView")
         return inflater.inflate(R.layout.home_frgament, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view?.findViewById(R.id.recyclerView)
-        recyclerView?.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+        println("onViewCreated")
+
+
+
+//        val staggeredGridLayoutManager : StaggeredGridLayoutManager = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+//            StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+//        } else {
+//            StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+//        }
+
+        val staggeredGridLayoutManager = StaggeredGridLayoutManager(resources.getInteger(R.integer.photos_list_columns), StaggeredGridLayoutManager.VERTICAL)
+
+        recyclerView = view.findViewById(R.id.recyclerView)
+
+        currentPosition?.let { position ->
+            println("onSetPos: $position")
+            staggeredGridLayoutManager.scrollToPosition(position)
+        }
 
         val homeAdapter = HomeAdapter()
         recyclerView?.adapter = homeAdapter
+        recyclerView?.layoutManager = staggeredGridLayoutManager
 
-        var pageIndex = 1
-        loadPhotos(1, homeAdapter, orderBy)
+
+        println("pageIndex $pageIndex")
+        loadPhotos(pageIndex, homeAdapter, orderBy)
 
 //        recyclerView reaches the bottom of list
         recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                currentPosition = (recyclerView.layoutManager as StaggeredGridLayoutManager)
+                                    .findLastCompletelyVisibleItemPositions(null)[0]
+//                    .spanCount
+                currentPosition?.let { pos -> println("pos $pos") }
+
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
                     Toast.makeText(context, "Last", Toast.LENGTH_LONG).show()
@@ -66,22 +111,24 @@ class HomeFragment : DaggerFragment() {
                 }
             }
         })
+
     }
 
-    fun loadPhotos(pageIndex : Int , homeAdapter : HomeAdapter, orderBy : String){
-        homeViewModel.getPhotos(pageIndex, orderBy, context)
+    fun loadPhotos(pageIndex: Int, homeAdapter: HomeAdapter, orderBy: String) {
+        println("pageIndex: $pageIndex")
 
-        if(pageIndex == 1)
-            recyclerView?.scrollToPosition(0)
+        homeViewModel.getPhotos(pageIndex,resources.getInteger(R.integer.photos_num_load_each_time), orderBy, context)
+
+//        if (pageIndex == 1)
+//            recyclerView?.scrollToPosition(0)
 
         homeViewModel.photos.observe(this, Observer { photos ->
             loadingBar?.visibility = View.GONE
             println("observe $pageIndex")
-            if(pageIndex == 1) {
+            if (pageIndex == 1) {
                 println("update photos")
                 homeAdapter.updatePhotos(photos)
-            }
-            else
+            } else
                 homeAdapter.addPhotos(photos)
         })
 
@@ -94,7 +141,7 @@ class HomeFragment : DaggerFragment() {
 
             builder.setPositiveButton("retry") { dialog, which ->
                 dialog.dismiss()
-                homeViewModel.getPhotos(pageIndex, orderBy, context)
+                homeViewModel.getPhotos(pageIndex,resources.getInteger(R.integer.photos_num_load_each_time), orderBy, context)
             }
 
             val dialog = builder.create()
@@ -110,21 +157,39 @@ class HomeFragment : DaggerFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId){
+        when (item?.itemId) {
             R.id.latestPhotos -> {
-                orderBy = "latest"
+                orderBy = ORDER_BY_LATEST
                 loadPhotos(1, HomeAdapter(), orderBy)
             }
             R.id.oldestPhotos -> {
-                orderBy = "oldest"
+                orderBy = ORDER_BY_OLDEST
                 loadPhotos(1, HomeAdapter(), orderBy)
             }
-            R.id.popularPhotos ->{
-                orderBy = "popular"
+            R.id.popularPhotos -> {
+                orderBy = ORDER_BY_POPULAR
                 loadPhotos(1, HomeAdapter(), orderBy)
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        println("onSaveInstanceState")
+        currentPosition?.let { position ->
+            outState.putInt(KEY_LAST_POSITION, position)
+            outState.putInt(KEY_PAGE_INDEX, pageIndex)
+            outState.putString(KEY_ORDER_BY, orderBy)
+            println("onSave: $position")
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+
+    companion object {
+        const val KEY_LAST_POSITION = "KEY_PHOTO_LIST_LAST_POSITION"
+        const val KEY_PAGE_INDEX = "KEY_PHOTO_PAGE_INDEX"
+        const val KEY_ORDER_BY = "KEY_PHOTO_ORDER_BY"
     }
 
 }

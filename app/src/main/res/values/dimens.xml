@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="photos_list_columns">4</integer>
+    <integer name="photos_num_load_each_time">24</integer>
+
+</resources>

@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/latestPhotos"
-        android:title="@string/latest_photos"/>
+        android:title = "@string/latest_photos"/>
 
     <item
-            android:id="@+id/oldestPhotos"
+            android:id = "@+id/oldestPhotos"
             android:title="@string/oldest_photos"/>
 
     <item
-            android:id="@+id/popularPhotos"
+            android:id = "@+id/popularPhotos"
             android:title="@string/popular_photos"/>
 
 </menu>

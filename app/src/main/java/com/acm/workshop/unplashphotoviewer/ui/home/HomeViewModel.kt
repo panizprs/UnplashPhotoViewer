@@ -19,11 +19,12 @@ class HomeViewModel(private val getLatestPhotoUseCase : GetPhotosUseCase) : View
     private val _error = MutableLiveData<Throwable>()
     val error : LiveData<Throwable> = _error
 
-    fun getPhotos(page: Int, orderBy: String, context : Context?){
+    fun getPhotos(page: Int,pageSize: Int, orderBy: String, context : Context?){
 //        println(page)
         if(NetworkModule.isNetworkConnected(context)) {
             if(prvOrderBy != orderBy || page > 1){
-                getLatestPhotoUseCase.execute(GetPhotosUseCase.Param(page, 24, orderBy), ::success, ::fail)
+                println("pageSize $pageSize")
+                getLatestPhotoUseCase.execute(GetPhotosUseCase.Param(page, pageSize, orderBy), ::success, ::fail)
                 prvOrderBy = orderBy
             }
         }

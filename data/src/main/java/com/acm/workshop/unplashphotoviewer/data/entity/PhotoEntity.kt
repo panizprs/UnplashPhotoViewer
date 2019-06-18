@@ -1,6 +1,6 @@
 package com.acm.workshop.UnplashphotoViewer.data.entity
 
-data class PhotoEntity(
+data class PhotoEntity (
     val id: String,
     val width: Int,
     val height: Int,

@@ -22,5 +22,8 @@ interface PhotoApi {
 
     companion object {
         const val BASE_URL = "https://api.unsplash.com/"
+        const val ORDER_BY_LATEST = "latest"
+        const val ORDER_BY_OLDEST = "oldest"
+        const val ORDER_BY_POPULAR = "popular"
     }
 }
