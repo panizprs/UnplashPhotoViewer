@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso
 
 
 
-class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
+class HomeAdapter(private val onPhotoClickListener: OnPhotoClickListener) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
 
     private var photos = mutableListOf<Photo>()
 
@@ -38,7 +38,7 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
     override fun getItemCount() = photos.size
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-        holder.bind(photos[position])
+        holder.bind(photos[position], onPhotoClickListener)
     }
 
 
@@ -47,8 +47,12 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
         private val image = itemView.findViewById<ImageView>(R.id.image)
 
 
-        fun bind(photo : Photo){
+        fun bind(photo : Photo, onPhotoClickListener: OnPhotoClickListener){
             Picasso.get().load(photo.small).into(image)
+
+            image.setOnClickListener {
+                onPhotoClickListener.onPhotoClicked(photo)
+            }
         }
     }
 }

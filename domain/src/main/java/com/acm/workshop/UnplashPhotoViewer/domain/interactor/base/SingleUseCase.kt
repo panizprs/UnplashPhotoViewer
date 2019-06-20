@@ -21,7 +21,7 @@ abstract class SingleUseCase<in Params, Result>(
             .observeOn(postExecutorThread.scheduler)
             .subscribeOn(useCaseExecutorThread.scheduler)
             .subscribe({ result ->
-                println("exec: $result")
+//                println("exec: $result")
                 onSuccess(result)
             }, { error ->
                 onFailure(error)

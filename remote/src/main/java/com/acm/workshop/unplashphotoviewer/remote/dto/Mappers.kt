@@ -10,5 +10,6 @@ fun UnsplashPhoto.toPhotoEntity() = PhotoEntity(
     height = height,
     width = width,
     full = urls.full,
+    regular = urls.regular,
     small = urls.small
 )

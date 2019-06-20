@@ -1,26 +1,26 @@
 package com.acm.workshop.unplashphotoviewer.ui.home
 
 import android.app.AlertDialog
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.acm.workshop.UnplashPhotoViewer.domain.model.Photo
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.home_frgament.*
+import kotlinx.android.synthetic.main.recyclerview_list.*
 import javax.inject.Inject
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.acm.workshop.remote.api.PhotoApi.Companion.ORDER_BY_LATEST
 import com.acm.workshop.remote.api.PhotoApi.Companion.ORDER_BY_OLDEST
 import com.acm.workshop.remote.api.PhotoApi.Companion.ORDER_BY_POPULAR
 import com.acm.workshop.unplashphotoviewer.R
+import com.acm.workshop.unplashphotoviewer.ui.detail.DetailFragment
 
 
-class HomeFragment : DaggerFragment() {
+class HomeFragment : DaggerFragment(), OnPhotoClickListener {
+
 
     @Inject
     lateinit var homeViewModelFactory: HomeViewModelFactory
@@ -61,7 +61,7 @@ class HomeFragment : DaggerFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         println("onCreateView")
-        return inflater.inflate(R.layout.home_frgament, container, false)
+        return inflater.inflate(R.layout.recyclerview_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,7 +86,7 @@ class HomeFragment : DaggerFragment() {
             staggeredGridLayoutManager.scrollToPosition(position)
         }
 
-        val homeAdapter = HomeAdapter()
+        val homeAdapter = HomeAdapter(this)
         recyclerView?.adapter = homeAdapter
         recyclerView?.layoutManager = staggeredGridLayoutManager
 
@@ -160,15 +160,15 @@ class HomeFragment : DaggerFragment() {
         when (item?.itemId) {
             R.id.latestPhotos -> {
                 orderBy = ORDER_BY_LATEST
-                loadPhotos(1, HomeAdapter(), orderBy)
+                loadPhotos(1, HomeAdapter(this), orderBy)
             }
             R.id.oldestPhotos -> {
                 orderBy = ORDER_BY_OLDEST
-                loadPhotos(1, HomeAdapter(), orderBy)
+                loadPhotos(1, HomeAdapter(this), orderBy)
             }
             R.id.popularPhotos -> {
                 orderBy = ORDER_BY_POPULAR
-                loadPhotos(1, HomeAdapter(), orderBy)
+                loadPhotos(1, HomeAdapter(this), orderBy)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -183,6 +183,13 @@ class HomeFragment : DaggerFragment() {
             println("onSave: $position")
         }
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onPhotoClicked(photo : Photo) {
+        fragmentManager?.beginTransaction()
+            ?.replace(R.id.content_frame, DetailFragment.newInstance(photo))
+            ?.addToBackStack(null)
+            ?.commit()
     }
 
 

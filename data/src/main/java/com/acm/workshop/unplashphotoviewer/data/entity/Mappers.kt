@@ -7,6 +7,7 @@ fun PhotoEntity.toPhoto() = Photo(
     width = width,
     height = height,
     small = small,
+    regular = regular,
     full = full,
     description = description,
     likes = likes
