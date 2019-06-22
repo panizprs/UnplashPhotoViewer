@@ -1,8 +1,10 @@
 package com.acm.workshop.unplashphotoviewer.di.module
 
-import com.acm.workshop.UnplashPhotoViewer.domain.repository.PhotoRepository
+import com.acm.workshop.UnsplashPhotoViewer.domain.repository.PhotoRepository
+import com.acm.workshop.UnsplashPhotoViewer.local.datasource.PhotoLocalDataSourceImpl
 import com.acm.workshop.UnplashphotoViewer.data.datasource.PhotoRemoteDataSource
 import com.acm.workshop.UnplashphotoViewer.data.repository.PhotoRepositoryImpl
+import com.acm.workshop.UnsplashPhotoViewer.data.datasource.PhotoLocalDataSource
 import com.acm.workshop.remote.api.PhotoApi
 import com.acm.workshop.remote.datasource.PhotoRemoteDataSourceImpl
 import dagger.Module
@@ -17,7 +19,12 @@ class HomeModule{
     }
 
     @Provides
-    fun providePhotoRepository(photoRemoteDataSource : PhotoRemoteDataSource) : PhotoRepository{
-        return PhotoRepositoryImpl(photoRemoteDataSource)
+    fun providePhotoLocalDataSource() : PhotoLocalDataSource {
+        return PhotoLocalDataSourceImpl()
+    }
+
+    @Provides
+    fun providePhotoRepository(photoRemoteDataSource : PhotoRemoteDataSource, photoLocalDataSource: PhotoLocalDataSource) : PhotoRepository{
+        return PhotoRepositoryImpl(photoRemoteDataSource, photoLocalDataSource)
     }
 }

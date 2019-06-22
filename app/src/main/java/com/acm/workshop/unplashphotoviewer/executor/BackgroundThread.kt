@@ -1,6 +1,6 @@
 package com.acm.workshop.unplashphotoviewer.executor
 
-import com.acm.workshop.UnplashPhotoViewer.domain.executor.UseCaseExecutorThread
+import com.acm.workshop.UnsplashPhotoViewer.domain.executor.UseCaseExecutorThread
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 

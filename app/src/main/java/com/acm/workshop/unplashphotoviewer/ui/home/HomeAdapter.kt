@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.acm.workshop.UnplashPhotoViewer.domain.model.Photo
+import com.acm.workshop.UnsplashPhotoViewer.domain.model.Photo
 import com.acm.workshop.unplashphotoviewer.R
 import com.squareup.picasso.Picasso
 

@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.acm.workshop.UnplashPhotoViewer.domain.model.Photo
+import com.acm.workshop.UnsplashPhotoViewer.domain.model.Photo
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.recyclerview_list.*
 import javax.inject.Inject

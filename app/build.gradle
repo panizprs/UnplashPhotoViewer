@@ -28,13 +28,13 @@ dependencies {
     implementation project (":domain")
     implementation project(':data')
     implementation project(':remote')
+    implementation project(':local')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.1'
 
-    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "androidx.constraintlayout:constraintlayout:$libraries.constraintlayout"
     implementation "androidx.recyclerview:recyclerview:$libraries.recyclerview"
 
