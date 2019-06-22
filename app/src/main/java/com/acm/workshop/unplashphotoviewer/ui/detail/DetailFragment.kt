@@ -18,7 +18,7 @@ import androidx.lifecycle.Observer
 import com.acm.workshop.unplashphotoviewer.R
 
 
-class DetailFragment : DaggerFragment(), OnDownloadPhotoClickListener {
+class DetailFragment : DaggerFragment(), OnDownloadPhotoClickListener, OnPhotoLoaded {
 
     private var photo: Photo? = null
 
@@ -41,12 +41,11 @@ class DetailFragment : DaggerFragment(), OnDownloadPhotoClickListener {
             println(notNullPhoto.regular)
             println(notNullPhoto.description)
 
-            view?.findViewById<View>(R.id.loadingBar)?.visibility = View.GONE
-
 
             val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView)
             recyclerView?.layoutManager = LinearLayoutManager(context)
-            recyclerView?.adapter = DetailAdapter(notNullPhoto, this)
+            recyclerView?.adapter = DetailAdapter(notNullPhoto, this, this)
+
         }
     }
 
@@ -80,12 +79,15 @@ class DetailFragment : DaggerFragment(), OnDownloadPhotoClickListener {
     private fun saveImage() {
         detailViewModel.savePhotoFile(photo?.full, photo?.id)
         detailViewModel.result.observe(this, Observer { result ->
-            Toast.makeText(requireContext(), result, Toast.LENGTH_LONG)
+            Toast.makeText(requireContext(), result, Toast.LENGTH_LONG).show()
             println("save image")
             println("${photo?.id}.jpg")
         })
     }
 
+    override fun onPhotoLoaded() {
+        view?.findViewById<View>(R.id.loadingBar)?.visibility = View.GONE
+    }
 
     companion object {
         fun newInstance(photoClicked: Photo): DetailFragment {

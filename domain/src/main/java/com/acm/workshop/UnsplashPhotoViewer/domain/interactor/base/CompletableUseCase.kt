@@ -15,7 +15,9 @@ abstract class CompletableUseCase<in Param>(
         buildCompletable(param)
             .subscribeOn(useCaseExecutorThread.scheduler)
             .observeOn(postExecutorThread.scheduler)
-            .subscribe()
+            .subscribe {
+                onSuccess()
+            }
             .also {disposable ->
                 add(disposable)
             }

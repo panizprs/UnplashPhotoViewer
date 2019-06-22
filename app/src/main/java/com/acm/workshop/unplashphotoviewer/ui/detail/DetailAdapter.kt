@@ -13,6 +13,7 @@ import java.lang.Exception
 
 class DetailAdapter(
     private val photo: Photo,
+    private val onPhotoLoaded: OnPhotoLoaded,
     private val onDownloadPhotoClickListener: OnDownloadPhotoClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -59,7 +60,7 @@ class DetailAdapter(
         val viewType = getItemViewType(position)
         when (viewType) {
             FullPhotoViewType -> {
-                (holder as CoverPhotoViewHolder).bind(photo)
+                (holder as CoverPhotoViewHolder).bind(photo, onPhotoLoaded)
             }
             IconsViewType -> {
                 (holder as IconsViewHolder).bind(photo, onDownloadPhotoClickListener)
